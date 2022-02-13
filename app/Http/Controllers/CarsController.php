@@ -14,9 +14,31 @@ class CarsController extends Controller
      */
     public function index()
     {
+        /*Usando Json 
+        borro todos los $car que tenga en index.php y pongo arriba de section
+        @foreach($cars as $car)
+            {{ $car['name'] }}
+        @endforeach
+
+        En Car.php:
+        protected $hidden = ['updated_at']
+
+        protected $visible = ['name', 'founded', 'decription', 'created_at']
+
+        Aqui escribo:
+        $cars = Car::all()->toJson();
+        $cars = json_decode($cars);
+
+
+        Usando Array
+        Todo lo mismo que arriba modificando solo esta linea
+
+        $cars = Car::all()->toArray();
+        
+        */
 
         $cars = Car::all();
-
+ 
         return view('cars.index',[
             'cars' => $cars
         ]);
@@ -65,7 +87,7 @@ class CarsController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -76,7 +98,7 @@ class CarsController extends Controller
      */
     public function edit($id)
     {
-        $car = Car::find($id)->first();
+        $car = Car::find($id);
 
         return view('cars.edit')->with('car',$car);
     }
@@ -110,7 +132,7 @@ class CarsController extends Controller
     {
         //dd($id) Con esto puedo saber si me esta llegan el id que quiero
         
-        //$car = Car::find($id)->first(); Si lo dejo por default el metodo, viene id por parametro y necesitare de esta linea para que funcione el metodo
+        //$car = Car::find($id); Si lo dejo por default el metodo, viene id por parametro y necesitare de esta linea para que funcione el metodo
 
         $car->delete();
 
