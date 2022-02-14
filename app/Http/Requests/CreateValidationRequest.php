@@ -25,6 +25,7 @@ class CreateValidationRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'image' => 'required|mimes:jpg,png,jpeg|max:5048',
             'founded' => 'required|integer|min:0|max:2022',
             'description' => 'required'
         ];

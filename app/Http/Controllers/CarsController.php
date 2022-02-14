@@ -54,6 +54,37 @@ class CarsController extends Controller
     public function store(CreateValidationRequest $request)
     {
         /*
+        Si es valido, continua
+        Si no es valido tira un ValidationException
+        */
+
+        $request->validated();
+
+        /*
+        Imagenes:
+        guessExtension()
+        getMimeType()
+        store()
+        asStore()
+        storePublicly()
+        move()
+        getClientOriginalName()
+        getClientMimeType()
+        guesscClientExtension()
+        getSize()
+        getError()
+        isValid()
+
+        $test = request->file('image')->guessExtension();
+        dd($test);
+        */
+
+        $newImageName = time() . '-' . $request->name
+         . '.' . $request->image->extension();
+
+        $request->image->move(public_path('images'),$newImageName);
+
+        /*
         $car = new Car;
         $car->name = $request->input('name');
         $car->founded = $request->input('founded');
@@ -61,17 +92,11 @@ class CarsController extends Controller
         $car->save();
         */
 
-        /*
-        Si es valido, continua
-        Si no es valido tira un ValidationException
-        */
-
-        $request->validated();
-
         $car = Car::create([
             'name' => $request->input('name'),
             'founded' => $request->input('founded'),
-            'description' => $request->input('description')
+            'description' => $request->input('description'),
+            'image_path' => $newImageName
 
         ]);
 
@@ -102,8 +127,8 @@ class CarsController extends Controller
             ->update([
                 'name' => $request->input('name'),
                 'founded' => $request->input('founded'),
-                'description' => $request->input('description')
-
+                'description' => $request->input('description'),
+                'image_path' => $newImageName
         ]);
         return redirect('/cars');
     }
