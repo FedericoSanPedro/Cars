@@ -107,8 +107,6 @@ class CarsController extends Controller
     {
         $car = Car::find($id);
 
-        $products = Product::find($id);
-
         return view('cars.show')->with('car',$car);
     }
 
