@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Car;
+use App\Rules\Uppercase;
+use App\Http\Requests\CreateValidationRequest;
 
 class CarsController extends Controller
 {
@@ -44,23 +46,12 @@ class CarsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('cars.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(CreateValidationRequest $request)
     {
         /*
         $car = new Car;
@@ -69,6 +60,14 @@ class CarsController extends Controller
         $car->description = $request->input('description');
         $car->save();
         */
+
+        /*
+        Si es valido, continua
+        Si no es valido tira un ValidationException
+        */
+
+        $request->validated();
+
         $car = Car::create([
             'name' => $request->input('name'),
             'founded' => $request->input('founded'),
@@ -79,23 +78,15 @@ class CarsController extends Controller
         return redirect('/cars');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        
+        $car = Car::find($id);
+
+        $products = Product::find($id);
+
+        return view('cars.show')->with('car',$car);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $car = Car::find($id);
@@ -103,15 +94,10 @@ class CarsController extends Controller
         return view('cars.edit')->with('car',$car);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(CreateValidationRequest $request, $id)
     {
+        $request->validated();
+
         $car = Car::where('id',$id)
             ->update([
                 'name' => $request->input('name'),
@@ -122,12 +108,6 @@ class CarsController extends Controller
         return redirect('/cars');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Car $car)
     {
         //dd($id) Con esto puedo saber si me esta llegan el id que quiero
